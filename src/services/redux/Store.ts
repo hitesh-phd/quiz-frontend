@@ -1,36 +1,40 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { persistStore } from "redux-persist";
-import createSagaMiddleware from "redux-saga";
-/**
- * ? Local Imports
- */
-import RootSaga from "./RootSaga";
-import { persistedRootReducer } from "./RootReducer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
+import { combineReducers, Reducer } from "redux";
+import { persistReducer } from "redux-persist";
+import thunk from "redux-thunk";
 
-// Setup Middlewares
-const sagaMiddleware = createSagaMiddleware();
-const middleware = [sagaMiddleware];
+import authSlice from "./AuthenticationSlice";
 
-if (__DEV__) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const createDebugger = require("redux-flipper").default;
-  middleware.push(createDebugger());
+export interface RootState {
+  Auth: ReturnType<typeof authSlice>;
 }
 
-// Create Store
-const store = configureStore({
-  reducer: persistedRootReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      immutableCheck: false,
-      serializableCheck: false,
-    }).concat(middleware),
-  devTools: process.env.NODE_ENV !== "production",
+const reducers: Reducer<RootState> = combineReducers({
+  Auth: authSlice,
 });
 
-sagaMiddleware.run(RootSaga);
+const persistConfig = {
+  key: "root",
+  storage: AsyncStorage,
+  whitelist: ["Auth"],
+};
 
-// Setup Store persistence
-const persistor = persistStore(store, null);
+const persistedReducer = persistReducer(persistConfig, reducers);
 
-export { store, persistor };
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
+});
+
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action<string>
+>;
+
+export default store;
