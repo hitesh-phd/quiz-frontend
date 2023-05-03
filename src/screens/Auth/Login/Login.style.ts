@@ -1,6 +1,7 @@
 import { ExtendedTheme } from "@react-navigation/native";
 import { ViewStyle, StyleSheet, TextStyle } from "react-native";
 import { ScreenWidth } from "@freakycoder/react-native-helpers";
+import { FONT_WEIGHT } from "@shared-constants";
 
 interface Style {
   container: ViewStyle;
@@ -8,6 +9,8 @@ interface Style {
   profileDetailContainer: ViewStyle;
   cardStyle: ViewStyle;
   valueTextStyle: TextStyle;
+  orTextStyle: TextStyle;
+  forgotPasswordStyle: TextStyle;
 }
 
 export default (theme: ExtendedTheme) => {
@@ -47,6 +50,18 @@ export default (theme: ExtendedTheme) => {
     },
     valueTextStyle: {
       marginTop: 8,
+    },
+    orTextStyle: {
+      position: "absolute",
+      top: -10,
+      left: "45%",
+      backgroundColor: "#EFEEFC",
+      paddingHorizontal: 10,
+      borderRadius: 10,
+    },
+    forgotPasswordStyle: {
+      marginTop: 20,
+      fontWeight: FONT_WEIGHT.Bold,
     },
   });
 };

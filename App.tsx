@@ -2,27 +2,23 @@ import "react-native-gesture-handler";
 import React from "react";
 import { StatusBar, useColorScheme, LogBox } from "react-native";
 import { Provider } from "react-redux";
+import { Provider as PaperProvider } from "react-native-paper";
 import SplashScreen from "react-native-splash-screen";
 import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
 import { isAndroid } from "@freakycoder/react-native-helpers";
-/**
- * ? Local Imports
- */
+
+import store from "@services/redux/Store";
 import Navigation from "./src/navigation";
-import { store, persistor } from "./src/services/redux/Store";
-import { initializeReduxService } from "@services/redux/ReduxService";
 
 LogBox.ignoreAllLogs();
 
 const App = () => {
   const scheme = useColorScheme();
   const isDarkMode = scheme === "dark";
-  console.log("store: ", store);
+  const persistor = persistStore(store);
 
-  React.useLayoutEffect(() => {
-    console.log("store: ", store);
-    initializeReduxService(store.dispatch, store.getState);
-  });
+  console.log("store: ", store);
 
   React.useEffect(() => {
     StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
@@ -39,7 +35,9 @@ const App = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <Navigation />
+        <PaperProvider>
+          <Navigation />
+        </PaperProvider>
       </PersistGate>
     </Provider>
   );
