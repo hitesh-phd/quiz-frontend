@@ -1,30 +1,32 @@
 import React, { useState, useMemo } from "react";
 import { useTheme } from "@react-navigation/native";
 import { View, TouchableOpacity } from "react-native";
-import * as Yup from "yup";
+import { ActivityIndicator, Divider } from "react-native-paper";
+import { object, string } from "yup";
 
 import createStyles from "./Login.style";
 import Button from "@shared-components/UI/Button/Button";
 import NavBar from "@shared-components/NavBar/NavBar";
 import MainView from "@shared-components/UI/MainView/MainView";
 import Text from "@shared-components/text-wrapper/TextWrapper";
-
-import { ICONS } from "@shared-constants";
-import { Divider, Subheading } from "react-native-paper";
 import Form from "@shared-components/Forms/Form";
 import FormField from "@shared-components/Forms/FormField";
-import ForgotPassword from "../ForgotPassword/ForgotPassword";
-import NewPassword from "../NewPassword/NewPassword";
-import { useDispatch } from "react-redux";
-import { loginAction } from "@services/redux/AuthenticationSlice";
-import { AppDispatch } from "@services/redux/Store";
-
 import SubmitButton from "@shared-components/Forms/SubmitButton";
+import { ICONS } from "@shared-constants";
+import { RootState, useAppDispatch } from "@services/redux/Store";
+import { loginAction } from "@services/redux/AuthenticationSlice";
+import { useAppSelector } from "@services/redux/Hook";
 
-type LoginProps = {};
+// type LoginProps = {
+//   null?: null;
+// };
 
-const Login: React.FC<LoginProps> = () => {
-  const dispatch = useDispatch<AppDispatch>();
+const Login: React.FC = () => {
+  const { loading, error } = useAppSelector((state: RootState) => state.Auth);
+  console.log("error in Login Page", error);
+  console.log("loading in Login Page", loading);
+
+  const dispatch = useAppDispatch();
   const theme = useTheme();
   const { colors } = theme;
   const styles = useMemo(() => createStyles(theme), [theme]);
@@ -37,28 +39,26 @@ const Login: React.FC<LoginProps> = () => {
     setSecureTextEntry((prev) => !prev);
   };
 
-  const loginFormSchema = Yup.object().shape({
-    email: Yup.string().email().required("Email is required"),
-    password: Yup.string()
+  const loginFormSchema = object().shape({
+    email: string().email().required("Email is required"),
+    password: string()
       .required("Password is required")
-      .min(1, "Your Password has to be at least 8 characters long"),
+      .min(8, "Your Password has to be at least 8 characters long"),
   });
 
   const onLogin = (email: string, password: string) => {
-    console.log("email", email);
-    console.log("password", password);
-    // dispatch(loginAction({ email, password }));
+    dispatch(loginAction({ email, password }));
   };
 
   return (
     <MainView style={{}}>
       <NavBar title="Login" />
-      <View
-        style={{
-          flex: 1,
-          padding: 20,
-        }}
-      >
+      {loading && (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" />
+        </View>
+      )}
+      <View style={{ ...styles.container, opacity: loading ? 0.5 : 1 }}>
         <Button
           onPress={() => {}}
           title="Login with Google"
@@ -73,11 +73,7 @@ const Login: React.FC<LoginProps> = () => {
           textColor="white"
           imageSrc={ICONS.FACEBOOK}
         />
-        <View
-          style={{
-            marginVertical: 30,
-          }}
-        >
+        <View style={{ marginVertical: 30 }}>
           <Divider bold />
           <Text h4 bold style={styles.orTextStyle}>
             OR
@@ -130,13 +126,7 @@ const Login: React.FC<LoginProps> = () => {
               Forgot Password?
             </Text>
           </TouchableOpacity>
-          <Text
-            h5
-            center
-            style={{
-              marginTop: 20,
-            }}
-          >
+          <Text h5 center style={{ marginTop: 20 }}>
             By continuing, you agree to <Text bold>our Terms of Services </Text>
             &<Text bold> Privacy Policy</Text>
           </Text>
@@ -145,5 +135,4 @@ const Login: React.FC<LoginProps> = () => {
     </MainView>
   );
 };
-
 export default Login;
