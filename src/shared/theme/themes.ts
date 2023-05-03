@@ -1,9 +1,10 @@
 import { DefaultTheme, ExtendedTheme } from "@react-navigation/native";
 
 export const palette = {
-  primary: "#0564d4",
+  primary: "#6A5AE0",
   secondary: "#ff6a00",
-  background: "#f6f8fa",
+  background: "#EFEEFC",
+  secondaryBackground: "#6A5AE0",
   white: "#fff",
   black: "#101214",
   button: "#1c1e21",
@@ -11,7 +12,7 @@ export const palette = {
   text: "#30363b",
   borderColor: "#d0d7de",
   borderColorDark: "#333942",
-  placeholder: "#a1a1a1",
+  placeholder: "#858494",
   danger: "rgb(208, 2, 27)",
   title: "rgb(102, 102, 102)",
   separator: "rgb(194, 194, 195)",
@@ -24,6 +25,8 @@ export const palette = {
   dynamicBackground: "#fff",
   transparent: "transparent",
   calpyse: "#2b7488",
+  whisper: "#E6E6E6",
+  blueLobster: "#0056b2",
 };
 
 export const LightTheme: ExtendedTheme = {

@@ -1,31 +1,30 @@
-import React from "react";
-import { useColorScheme } from "react-native";
+import React, { useEffect } from "react";
+import { TouchableOpacity, useColorScheme } from "react-native";
 import Icon from "react-native-dynamic-vector-icons";
-import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from "@react-navigation/stack";
+import { NavigationContainer, RouteProp } from "@react-navigation/native";
 import { isReadyRef, navigationRef } from "react-navigation-helpers";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-/**
- * ? Local & Shared Imports
- */
+
+import { useAppSelector } from "../services/redux/Hook";
 import { SCREENS } from "@shared-constants";
 import { LightTheme, DarkTheme, palette } from "@theme/themes";
-// ? Screens
-import HomeScreen from "@screens/home/HomeScreen";
-import SearchScreen from "@screens/search/SearchScreen";
-import DetailScreen from "@screens/detail/DetailScreen";
-import ProfileScreen from "@screens/profile/ProfileScreen";
-import NotificationScreen from "@screens/notification/NotificationScreen";
+import { NewPassword, ForgotPassword, Login, Register } from "@screens/Auth";
+import OnBoarding from "@screens/onBoarding/OnBoarding";
+import { selectIsAuthenticated } from "@services/redux/AuthenticationSlice";
 
-// ? If you want to use stack or tab or both
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const Navigation = () => {
   const scheme = useColorScheme();
   const isDarkMode = scheme === "dark";
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
-  React.useEffect((): any => {
+  useEffect((): any => {
     return () => (isReadyRef.current = false);
   }, []);
 
@@ -53,31 +52,46 @@ const Navigation = () => {
         iconName = focused ? "home" : "home-outline";
         break;
     }
-    return <Icon name={iconName} type="Ionicons" size={size} color={color} />;
+    // return <Icon name={iconName} type="Ionicons" size={size} color={color} />;
   };
 
-  const renderTabNavigation = () => {
+  // const renderTabNavigation = () => {
+  //   return (
+  //     <Tab.Navigator
+  //       screenOptions={({ route }) => ({
+  //         headerShown: false,
+  //         tabBarIcon: ({ focused, color, size }) =>
+  //           renderTabIcon(route, focused, color, size),
+  //         tabBarActiveTintColor: palette.primary,
+  //         tabBarInactiveTintColor: "gray",
+  //         tabBarStyle: {
+  //           backgroundColor: isDarkMode ? palette.black : palette.white,
+  //         },
+  //       })}
+  //     >
+  //       <Tab.Screen name={SCREENS.HOME} component={HomeScreen} />
+  //       <Tab.Screen name={SCREENS.SEARCH} component={SearchScreen} />
+  //       <Tab.Screen
+  //         name={SCREENS.NOTIFICATION}
+  //         component={NotificationScreen}
+  //       />
+  //       <Tab.Screen name={SCREENS.PROFILE} component={ProfileScreen} />
+  //     </Tab.Navigator>
+  //   );
+  // };
+
+  const AuthStack = () => {
     return (
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarIcon: ({ focused, color, size }) =>
-            renderTabIcon(route, focused, color, size),
-          tabBarActiveTintColor: palette.primary,
-          tabBarInactiveTintColor: "gray",
-          tabBarStyle: {
-            backgroundColor: isDarkMode ? palette.black : palette.white,
-          },
-        })}
-      >
-        <Tab.Screen name={SCREENS.HOME} component={HomeScreen} />
-        <Tab.Screen name={SCREENS.SEARCH} component={SearchScreen} />
-        <Tab.Screen
-          name={SCREENS.NOTIFICATION}
-          component={NotificationScreen}
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name={SCREENS.ON_BOARDING} component={OnBoarding} />
+        <Stack.Screen name={SCREENS.LOGIN} component={Login} />
+        <Stack.Screen name={SCREENS.REGISTER} component={Register} />
+        <Stack.Screen name={SCREENS.NEW_PASSWORD} component={NewPassword} />
+        <Stack.Screen
+          name={SCREENS.FORGOT_PASSWORD}
+          component={ForgotPassword}
         />
-        <Tab.Screen name={SCREENS.PROFILE} component={ProfileScreen} />
-      </Tab.Navigator>
+      </Stack.Navigator>
     );
   };
 
@@ -90,10 +104,11 @@ const Navigation = () => {
       theme={isDarkMode ? DarkTheme : LightTheme}
     >
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name={SCREENS.HOME} component={renderTabNavigation} />
+        {/* <Stack.Screen name={SCREENS.HOME} component={renderTabNavigation} />
         <Stack.Screen name={SCREENS.DETAIL}>
           {(props) => <DetailScreen {...props} />}
-        </Stack.Screen>
+        </Stack.Screen> */}
+        <Stack.Screen name={SCREENS.AUTH_STACK} component={AuthStack} />
       </Stack.Navigator>
     </NavigationContainer>
   );
