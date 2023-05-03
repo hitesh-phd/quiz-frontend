@@ -53,6 +53,7 @@ interface LoginPayload {
 }
 
 interface RegisterPayload {
+  name: string;
   email: string;
   password: string;
 }
@@ -87,15 +88,17 @@ export const registerAction = createAsyncThunk<
   RegisterResponse,
   RegisterPayload,
   { rejectValue: ErrorResponse }
->("auth/register", async ({ email, password }, { rejectWithValue }) => {
+>("auth/register", async ({ name, email, password }, { rejectWithValue }) => {
   try {
     const response: AxiosResponse<RegisterResponse> = await axios.post(
-      `${BASE_URL}/auth/register`,
+      `${BASE_URL}/v1/auth/register`,
       {
+        name,
         email,
         password,
       },
     );
+    console.log("Resonse from register action", response.data);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error?.response?.data);
@@ -138,7 +141,7 @@ const authSlice = createSlice({
       })
       .addCase(registerAction.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? "An unknown error occurred.";
+        state.error = action.payload?.message ?? "An unknown error occurred.";
       });
   },
 });
