@@ -4,18 +4,12 @@ import axios, { AxiosResponse } from "axios";
 
 type User = {
   email: string;
-  password: string;
+  name: string;
 };
 
 type Tokens = {
-  access: {
-    expires: string;
-    token: string;
-  };
-  refresh: {
-    expires: string;
-    token: string;
-  };
+  access: { token: string };
+  refresh: { token: string };
 };
 
 type LoginResponse = {
@@ -25,26 +19,7 @@ type LoginResponse = {
 
 type RegisterResponse = {
   user: User;
-};
-
-type AuthState = {
-  user: User | null;
-  accessToken: string | null;
-  refreshToken: string | null;
-  loading: boolean;
-  error: any;
-  isAuthenticated: boolean;
-  isRegistered: boolean;
-};
-
-const initialState: AuthState = {
-  user: null,
-  accessToken: null,
-  refreshToken: null,
-  loading: false,
-  error: null,
-  isAuthenticated: false,
-  isRegistered: false,
+  tokens: Tokens;
 };
 
 interface LoginPayload {
@@ -62,6 +37,26 @@ type ErrorResponse = {
   message: string;
 };
 
+type AuthState = {
+  userName: string;
+  accessToken: string | null;
+  refreshToken: string | null;
+  loading: boolean;
+  error: any;
+  isAuthenticated: boolean;
+  isRegistered: boolean;
+};
+
+const initialState: AuthState = {
+  userName: "",
+  accessToken: null,
+  refreshToken: null,
+  loading: false,
+  error: null,
+  isAuthenticated: false,
+  isRegistered: false,
+};
+
 export const loginAction = createAsyncThunk<
   LoginResponse,
   LoginPayload,
@@ -70,12 +65,8 @@ export const loginAction = createAsyncThunk<
   try {
     const response: AxiosResponse<LoginResponse> = await axios.post(
       `${BASE_URL}/v1/auth/login`,
-      {
-        email,
-        password,
-      },
+      { email, password },
     );
-    console.log("Inside login action");
     console.log("res.data", response.data);
     return response.data;
   } catch (error: any) {
@@ -110,7 +101,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     Logout: (state) => {
-      state.user = null;
+      state.userName = "";
       state.accessToken = null;
       state.refreshToken = null;
       state.isAuthenticated = false;
@@ -126,6 +117,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.accessToken = action.payload.tokens.access.token;
         state.refreshToken = action.payload.tokens.refresh.token;
+        state.userName = action.payload.user.name;
       })
       .addCase(loginAction.rejected, (state, action) => {
         state.loading = false;
@@ -134,10 +126,12 @@ const authSlice = createSlice({
       .addCase(registerAction.pending, (state) => {
         state.loading = true;
       })
-      .addCase(registerAction.fulfilled, (state) => {
+      .addCase(registerAction.fulfilled, (state, action) => {
         state.loading = false;
-        // state.user = action.payload;
-        state.isRegistered = true;
+        state.isAuthenticated = true;
+        state.accessToken = action.payload.tokens.access.token;
+        state.refreshToken = action.payload.tokens.refresh.token;
+        state.userName = action.payload.user.name;
       })
       .addCase(registerAction.rejected, (state, action) => {
         state.loading = false;
@@ -146,13 +140,8 @@ const authSlice = createSlice({
   },
 });
 
-export const selectUser = (state: { Auth: AuthState }) => state.Auth.user;
 export const selectIsAuthenticated = (state: { Auth: AuthState }) =>
   state.Auth.isAuthenticated;
-export const selectIsRegistered = (state: { Auth: AuthState }) =>
-  state.Auth.isRegistered;
-export const selectLoading = (state: { Auth: AuthState }) => state.Auth.loading;
-export const selectError = (state: { Auth: AuthState }) => state.Auth.error;
 
 export const { Logout } = authSlice.actions;
 

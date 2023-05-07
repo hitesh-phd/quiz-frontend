@@ -10,6 +10,7 @@ import { isAndroid } from "@freakycoder/react-native-helpers";
 
 import store from "@services/redux/Store";
 import Navigation from "./src/navigation";
+import { palette } from "@theme/themes";
 
 LogBox.ignoreAllLogs();
 
@@ -23,7 +24,7 @@ const App = () => {
   React.useEffect(() => {
     StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
     if (isAndroid) {
-      StatusBar.setBackgroundColor("rgba(0,0,0,0)");
+      StatusBar.setBackgroundColor(palette.background, true);
       StatusBar.setTranslucent(true);
     }
 

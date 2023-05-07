@@ -39,7 +39,10 @@ export const SOMETHING_WENT_WRONG = "Something went wrong";
 // ? Screens
 export const SCREENS = {
   AUTH_STACK: "AuthStack",
+  HOME_STACK: "HomeStack",
   HOME: "Home",
+  LEADER_BOARD: "LeaderBoard",
+  USER_PROFILE: "UserProfile",
   SEARCH: "Search",
   NOTIFICATION: "Notification",
   PROFILE: "Profile",

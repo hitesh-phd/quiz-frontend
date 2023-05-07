@@ -1,13 +1,20 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+
+import AppScreen from "@shared-components/UI/AppScreen/AppScreen";
+import { palette } from "@theme/themes";
 
 type Props = {};
 
 const Home = (props: Props) => {
   return (
-    <View>
+    <AppScreen
+      style={{
+        backgroundColor: palette.secondaryBackground,
+      }}
+    >
       <Text>Home</Text>
-    </View>
+    </AppScreen>
   );
 };
 

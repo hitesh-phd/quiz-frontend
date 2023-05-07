@@ -7,7 +7,7 @@ import { object, string } from "yup";
 import createStyles from "./Login.style";
 import Button from "@shared-components/UI/Button/Button";
 import NavBar from "@shared-components/NavBar/NavBar";
-import MainView from "@shared-components/UI/MainView/MainView";
+import AppScreen from "@shared-components/UI/AppScreen/AppScreen";
 import Text from "@shared-components/text-wrapper/TextWrapper";
 import Form from "@shared-components/Forms/Form";
 import FormField from "@shared-components/Forms/FormField";
@@ -51,7 +51,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <MainView style={{}}>
+    <AppScreen style={{}}>
       <NavBar title="Login" />
       {loading && (
         <View style={styles.loaderContainer}>
@@ -132,7 +132,7 @@ const Login: React.FC = () => {
           </Text>
         </Form>
       </View>
-    </MainView>
+    </AppScreen>
   );
 };
 export default Login;

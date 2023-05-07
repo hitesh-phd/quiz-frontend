@@ -8,7 +8,7 @@ import { useAppSelector } from "@services/redux/Hook";
 
 import createStyles from "./Register.style";
 import NavBar from "@shared-components/NavBar/NavBar";
-import MainView from "@shared-components/UI/MainView/MainView";
+import AppScreen from "@shared-components/UI/AppScreen/AppScreen";
 import Text from "@shared-components/text-wrapper/TextWrapper";
 import Form from "@shared-components/Forms/Form";
 import FormField from "@shared-components/Forms/FormField";
@@ -55,7 +55,7 @@ const Register = () => {
   };
 
   return (
-    <MainView style={{}}>
+    <AppScreen style={{}}>
       <NavBar title="Register" />
       {loading && (
         <View style={styles.loaderContainer}>
@@ -135,7 +135,7 @@ const Register = () => {
           </Text>
         </Form>
       </View>
-    </MainView>
+    </AppScreen>
   );
 };
 export default Register;

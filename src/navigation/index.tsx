@@ -1,20 +1,27 @@
 import React, { useEffect } from "react";
-import { TouchableOpacity, useColorScheme } from "react-native";
+import { TouchableOpacity, useColorScheme, Image } from "react-native";
 import Icon from "react-native-dynamic-vector-icons";
 import {
   createStackNavigator,
   StackNavigationProp,
 } from "@react-navigation/stack";
-import { NavigationContainer, RouteProp } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  RouteProp,
+  DefaultTheme,
+} from "@react-navigation/native";
 import { isReadyRef, navigationRef } from "react-navigation-helpers";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 import { useAppSelector } from "../services/redux/Hook";
-import { SCREENS } from "@shared-constants";
-import { LightTheme, DarkTheme, palette } from "@theme/themes";
-import { NewPassword, ForgotPassword, Login, Register } from "@screens/Auth";
+
+import Home from "@screens/Home/Home";
+import LeaderBoard from "@screens/LeaderBoard/LeaderBoard";
+import UserProfile from "@screens/UserProfile/UserProfile";
 import OnBoarding from "@screens/onBoarding/OnBoarding";
+import { NewPassword, ForgotPassword, Login, Register } from "@screens/Auth";
 import { selectIsAuthenticated } from "@services/redux/AuthenticationSlice";
+import { LightTheme, DarkTheme, palette } from "@theme/themes";
+import { SCREENS } from "@shared-constants";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -35,50 +42,67 @@ const Navigation = () => {
     size: number,
   ) => {
     let iconName = "home";
+    let iconType = "Ionicons";
     switch (route.name) {
       case SCREENS.HOME:
         iconName = focused ? "home" : "home-outline";
         break;
-      case SCREENS.SEARCH:
-        iconName = focused ? "search" : "search-outline";
+      case SCREENS.LEADER_BOARD:
+        return focused ? (
+          <Icon
+            name="leaderboard"
+            type="MaterialIcons"
+            size={size}
+            color={color}
+          />
+        ) : (
+          <Image
+            source={require("@assets/images/leaderBoard.png")}
+            style={{ width: 30, height: 30 }}
+          />
+        );
         break;
-      case SCREENS.NOTIFICATION:
-        iconName = focused ? "notifications" : "notifications-outline";
-        break;
-      case SCREENS.PROFILE:
+      case SCREENS.USER_PROFILE:
         iconName = focused ? "person" : "person-outline";
         break;
       default:
         iconName = focused ? "home" : "home-outline";
         break;
     }
-    // return <Icon name={iconName} type="Ionicons" size={size} color={color} />;
+
+    return <Icon name={iconName} type={iconType} size={size} color={color} />;
   };
 
-  // const renderTabNavigation = () => {
-  //   return (
-  //     <Tab.Navigator
-  //       screenOptions={({ route }) => ({
-  //         headerShown: false,
-  //         tabBarIcon: ({ focused, color, size }) =>
-  //           renderTabIcon(route, focused, color, size),
-  //         tabBarActiveTintColor: palette.primary,
-  //         tabBarInactiveTintColor: "gray",
-  //         tabBarStyle: {
-  //           backgroundColor: isDarkMode ? palette.black : palette.white,
-  //         },
-  //       })}
-  //     >
-  //       <Tab.Screen name={SCREENS.HOME} component={HomeScreen} />
-  //       <Tab.Screen name={SCREENS.SEARCH} component={SearchScreen} />
-  //       <Tab.Screen
-  //         name={SCREENS.NOTIFICATION}
-  //         component={NotificationScreen}
-  //       />
-  //       <Tab.Screen name={SCREENS.PROFILE} component={ProfileScreen} />
-  //     </Tab.Navigator>
-  //   );
-  // };
+  const renderTabNavigation = () => {
+    return (
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarIcon: ({ focused, color, size }) =>
+            renderTabIcon(route, focused, color, size),
+          tabBarActiveTintColor: palette.primary,
+          tabBarInactiveTintColor: "gray",
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            backgroundColor: isDarkMode ? palette.black : palette.white,
+            borderTopWidth: 0,
+            elevation: 0,
+            borderTopRightRadius: 25,
+            borderTopLeftRadius: 25,
+            height: 60,
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+          },
+        })}
+      >
+        <Tab.Screen name={SCREENS.HOME} component={Home} />
+        <Tab.Screen name={SCREENS.LEADER_BOARD} component={LeaderBoard} />
+        <Tab.Screen name={SCREENS.USER_PROFILE} component={UserProfile} />
+      </Tab.Navigator>
+    );
+  };
 
   const AuthStack = () => {
     return (
@@ -95,6 +119,12 @@ const Navigation = () => {
     );
   };
 
+  const HomeStack = () => (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name={SCREENS.HOME} component={Home} />
+    </Stack.Navigator>
+  );
+
   return (
     <NavigationContainer
       ref={navigationRef}
@@ -104,11 +134,14 @@ const Navigation = () => {
       theme={isDarkMode ? DarkTheme : LightTheme}
     >
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen name={SCREENS.HOME} component={renderTabNavigation} />
-        <Stack.Screen name={SCREENS.DETAIL}>
-          {(props) => <DetailScreen {...props} />}
-        </Stack.Screen> */}
-        <Stack.Screen name={SCREENS.AUTH_STACK} component={AuthStack} />
+        {isAuthenticated ? (
+          <Stack.Screen
+            name={SCREENS.HOME_STACK}
+            component={renderTabNavigation}
+          />
+        ) : (
+          <Stack.Screen name={SCREENS.AUTH_STACK} component={AuthStack} />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

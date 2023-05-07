@@ -4,7 +4,7 @@ import * as Yup from "yup";
 
 import createStyles from "./NewPassword.style";
 import NavBar from "@shared-components/NavBar/NavBar";
-import MainView from "@shared-components/UI/MainView/MainView";
+import AppScreen from "@shared-components/UI/AppScreen/AppScreen";
 import Text from "@shared-components/text-wrapper/TextWrapper";
 import { Form, FormField } from "@shared-components/Forms";
 import Button from "@shared-components/UI/Button/Button";
@@ -34,7 +34,7 @@ const NewPassword = () => {
   });
 
   return (
-    <MainView>
+    <AppScreen>
       <NavBar title="New Password" />
       <View style={styles.innerContainer}>
         <Text h4>
@@ -81,7 +81,7 @@ const NewPassword = () => {
           </View>
         </Form>
       </View>
-    </MainView>
+    </AppScreen>
   );
 };
 
