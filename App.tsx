@@ -37,6 +37,7 @@ const App = () => {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <PaperProvider>
+          <StatusBar barStyle="light-content" />
           <Navigation />
         </PaperProvider>
       </PersistGate>
