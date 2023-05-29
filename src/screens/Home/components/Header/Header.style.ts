@@ -17,6 +17,8 @@ export default (theme: ExtendedTheme) => {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
+      paddingVertical: 10,
+      paddingHorizontal: 20,
     },
     innerContainer: {
       justifyContent: "center",

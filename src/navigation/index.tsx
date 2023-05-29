@@ -83,6 +83,7 @@ const Navigation = () => {
           tabBarActiveTintColor: palette.primary,
           tabBarInactiveTintColor: "gray",
           tabBarShowLabel: false,
+
           tabBarStyle: {
             backgroundColor: isDarkMode ? palette.black : palette.white,
             borderTopWidth: 0,
@@ -97,7 +98,7 @@ const Navigation = () => {
           },
         })}
       >
-        <Tab.Screen name={SCREENS.HOME} component={Home} />
+        <Tab.Screen name={SCREENS.HOME_STACK} component={HomeStack} />
         <Tab.Screen name={SCREENS.LEADER_BOARD} component={LeaderBoard} />
         <Tab.Screen name={SCREENS.USER_PROFILE} component={UserProfile} />
       </Tab.Navigator>

@@ -8,8 +8,6 @@ export default () => {
   return StyleSheet.create<Style>({
     screen: {
       paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-      flex: 1,
-      paddingHorizontal: 20,
       marginVertical: 10,
     },
   });
