@@ -93,7 +93,7 @@ const Home = ({ navigation }: Props) => {
         }}
       >
         <View style={styles.headerContainer}>
-          <Header greeting="Good Morning" userName="John Doe" />
+          <Header greeting="Good Morning" userName="Sagar" />
           <TopPickCard
             header="Top Pick"
             title="Travel Trivia Quiz"
