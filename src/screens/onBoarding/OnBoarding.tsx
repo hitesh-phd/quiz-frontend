@@ -10,9 +10,7 @@ import Text from "@shared-components/text-wrapper/TextWrapper";
 
 import { ICONS, SCREENS } from "@shared-constants";
 
-type LoginProps = {};
-
-const OnBoarding: React.FC<LoginProps> = () => {
+const OnBoarding: React.FC = () => {
   const theme = useTheme();
   const { colors } = theme;
   const styles = useMemo(() => createStyles(theme), [theme]);

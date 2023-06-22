@@ -1,34 +1,30 @@
 import React, { useMemo } from "react";
-import {
-  ImageBackground,
-  ScrollView,
-  StyleSheet,
-  View,
-  FlatList,
-} from "react-native";
+import { ScrollView, View } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Avatar } from "react-native-paper";
-import Icon from "react-native-dynamic-vector-icons";
+import Icon, { IconType } from "react-native-dynamic-vector-icons";
 
 import createStyles from "./Home.style";
 import Text from "@shared-components/text-wrapper/TextWrapper";
 import Header from "./components/Header/Header";
 import TopPickCard from "./components/TopPick/TopPickCard";
 import { palette } from "@theme/themes";
-import AppScreen from "@shared-components/UI/AppScreen/AppScreen";
+import MyStatusBar from "@shared-components/MyStatusBar";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { OPACITY } from "@shared-constants";
 
 type Props = {
   navigation: any;
 };
 
-type CategoryItem = {
-  id: string;
-  title: string;
-  color: string;
-  icon: string;
-  iconType: string;
-  noOfQuizzes: number;
-};
+// type CategoryItem = {
+//   id: string;
+//   title: string;
+//   color: string;
+//   icon: string;
+//   iconType: string;
+//   noOfQuizzes: number;
+// };
 
 const DUMMY_CATEGORIES = [
   {
@@ -56,7 +52,7 @@ const DUMMY_CATEGORIES = [
     noOfQuizzes: 19,
   },
   {
-    id: "c1",
+    id: "c4",
     title: "science",
     color: palette.highlight,
     icon: "science",
@@ -64,7 +60,7 @@ const DUMMY_CATEGORIES = [
     noOfQuizzes: 10,
   },
   {
-    id: "c2",
+    id: "c5",
     title: "Music",
     color: palette.secondary,
     icon: "music",
@@ -72,7 +68,7 @@ const DUMMY_CATEGORIES = [
     noOfQuizzes: 14,
   },
   {
-    id: "c3",
+    id: "c6",
     title: "History",
     color: palette.background,
     icon: "book-outline",
@@ -86,28 +82,16 @@ const Home = ({ navigation }: Props) => {
   const { colors } = theme;
   const styles = useMemo(() => createStyles(theme), [theme]);
 
-  const renderCategoryItem = ({ item }: { item: CategoryItem }) => (
-    <View style={[styles.categoryItem, { backgroundColor: item.color }]}>
-      <View style={styles.categoryIconContainer}>
-        <Icon
-          name={item.icon}
-          type={item.iconType}
-          size={24}
-          color={colors.white}
-        />
-      </View>
-      <Text h3 color={colors.white} bold style={{ marginTop: 10 }}>
-        {item.title}
-      </Text>
-      <Text h3 color={colors.white} bold style={{ marginTop: 10 }}>
-        {item.noOfQuizzes} Quizzes
-      </Text>
-    </View>
-  );
-
   return (
-    <AppScreen style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <View style={styles.container}>
+      <MyStatusBar />
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        style={{
+          backgroundColor: colors.background,
+          flexGrow: 1,
+        }}
+      >
         <View style={styles.headerContainer}>
           <Header greeting="Good Morning" userName="John Doe" />
           <TopPickCard
@@ -159,7 +143,7 @@ const Home = ({ navigation }: Props) => {
             <View style={styles.iconContainer}>
               <Icon
                 name="crown"
-                type="MaterialCommunityIcons"
+                type={IconType.MaterialCommunityIcons}
                 size={24}
                 color="white"
               />
@@ -175,18 +159,32 @@ const Home = ({ navigation }: Props) => {
             Categories
           </Text>
           <View style={styles.categoryContainer}>
-            <FlatList
-              disableVirtualization={false}
-              scrollEnabled={false}
-              data={DUMMY_CATEGORIES}
-              keyExtractor={(item) => item.id}
-              renderItem={renderCategoryItem}
-              numColumns={2}
-            />
+            {DUMMY_CATEGORIES.map((item) => (
+              <TouchableOpacity
+                style={[styles.categoryItem, { backgroundColor: item.color }]}
+                key={item.id}
+                activeOpacity={OPACITY.SEMI_FULL}
+              >
+                <View style={styles.categoryIconContainer}>
+                  <Icon
+                    name={item.icon}
+                    type={IconType[item.iconType as keyof typeof IconType]}
+                    size={24}
+                    color={colors.white}
+                  />
+                </View>
+                <Text h3 color={colors.white} bold style={{ marginTop: 10 }}>
+                  {item.title}
+                </Text>
+                <Text h3 color={colors.white} bold style={{ marginTop: 10 }}>
+                  {item.noOfQuizzes} Quizzes
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
       </ScrollView>
-    </AppScreen>
+    </View>
   );
 };
 

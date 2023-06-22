@@ -3,6 +3,7 @@ import { ScreenWidth } from "@freakycoder/react-native-helpers";
 import { ViewStyle, StyleSheet, TextStyle } from "react-native";
 
 interface Style {
+  container: ViewStyle;
   scrollContainer: ViewStyle;
   mainContainer: ViewStyle;
   headerContainer: ViewStyle;
@@ -17,6 +18,10 @@ interface Style {
 export default (theme: ExtendedTheme) => {
   const { colors } = theme;
   return StyleSheet.create<Style>({
+    container: {
+      flex: 1,
+      width: ScreenWidth,
+    },
     scrollContainer: {
       justifyContent: "space-between",
       width: ScreenWidth,
@@ -75,13 +80,13 @@ export default (theme: ExtendedTheme) => {
     },
     categoryContainer: {
       flexDirection: "row",
+      flexWrap: "wrap",
       justifyContent: "space-between",
-      alignItems: "center",
       marginTop: 20,
-      marginBottom: 40,
+      paddingBottom: 40,
     },
     categoryItem: {
-      width: ScreenWidth * 0.5 - 25,
+      width: ScreenWidth * 0.5 - 30,
       height: 180,
       borderRadius: 20,
       justifyContent: "center",

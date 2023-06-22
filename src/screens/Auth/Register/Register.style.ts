@@ -6,6 +6,7 @@ import { FONT_WEIGHT } from "@shared-constants";
 
 interface Style {
   container: ViewStyle;
+  innerContainer: ViewStyle;
   profileContainer: ViewStyle;
   profileDetailContainer: ViewStyle;
   cardStyle: ViewStyle;
@@ -13,12 +14,18 @@ interface Style {
   orTextStyle: TextStyle;
   loginTextStyle: TextStyle;
   loaderContainer: ViewStyle;
+  loginTextContainer: ViewStyle;
 }
 
 export default (theme: ExtendedTheme) => {
   const { colors } = theme;
   return StyleSheet.create<Style>({
     container: {
+      flex: 1,
+      width: ScreenWidth,
+      backgroundColor: colors.whisper,
+    },
+    innerContainer: {
       flex: 1,
       padding: 20,
     },
@@ -70,6 +77,12 @@ export default (theme: ExtendedTheme) => {
       width: "100%",
       height: "100%",
       zIndex: 1,
+    },
+    loginTextContainer: {
+      flexDirection: "row",
+      marginTop: 20,
+      alignItems: "center",
+      justifyContent: "center",
     },
   });
 };

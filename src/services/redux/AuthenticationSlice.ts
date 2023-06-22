@@ -1,6 +1,7 @@
-import { BASE_URL } from "../../shared/constants/index";
+import { BASE_URL, SOMETHING_WENT_WRONG } from "../../shared/constants/index";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosResponse } from "axios";
+import { ToastMessage } from "utils/Toast";
 
 type User = {
   email: string;
@@ -31,6 +32,11 @@ interface RegisterPayload {
   name: string;
   email: string;
   password: string;
+}
+
+interface RefreshTokenPayload {
+  refreshToken: string;
+  token: string;
 }
 
 type ErrorResponse = {
@@ -68,9 +74,11 @@ export const loginAction = createAsyncThunk<
       { email, password },
     );
     console.log("res.data", response.data);
+    ToastMessage.showSuccessMessage("Login Successful");
     return response.data;
   } catch (error: any) {
     console.log("error", error?.response?.data?.message);
+    ToastMessage.showErrorMessage(error?.response?.data?.message);
     return rejectWithValue(error?.response?.data);
   }
 });
@@ -90,6 +98,28 @@ export const registerAction = createAsyncThunk<
       },
     );
     console.log("Resonse from register action", response.data);
+    ToastMessage.showSuccessMessage("Registration Successful");
+    return response.data;
+  } catch (error: any) {
+    console.log("error", error?.response?.data?.message);
+    ToastMessage.showErrorMessage(error?.response?.data?.message);
+    return rejectWithValue(error?.response?.data);
+  }
+});
+
+export const refreshTokenAction = createAsyncThunk<
+  RegisterResponse,
+  RefreshTokenPayload,
+  { rejectValue: ErrorResponse }
+>("auth/refreshToken", async ({ refreshToken, token }, { rejectWithValue }) => {
+  try {
+    const response: AxiosResponse<RegisterResponse> = await axios.post(
+      `${BASE_URL}/v1/auth/refresh-tokens`,
+      {
+        refreshToken,
+        token,
+      },
+    );
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error?.response?.data);
@@ -121,7 +151,7 @@ const authSlice = createSlice({
       })
       .addCase(loginAction.rejected, (state, action) => {
         state.loading = false;
-        state.error = action?.payload?.message ?? "An unknown error occurred.";
+        state.error = action?.payload?.message ?? SOMETHING_WENT_WRONG;
       })
       .addCase(registerAction.pending, (state) => {
         state.loading = true;
@@ -135,7 +165,7 @@ const authSlice = createSlice({
       })
       .addCase(registerAction.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message ?? "An unknown error occurred.";
+        state.error = action.payload?.message ?? SOMETHING_WENT_WRONG;
       });
   },
 });

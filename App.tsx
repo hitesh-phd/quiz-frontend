@@ -7,6 +7,7 @@ import SplashScreen from "react-native-splash-screen";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import { isAndroid } from "@freakycoder/react-native-helpers";
+import Toast from "react-native-toast-message";
 
 import store from "@services/redux/Store";
 import Navigation from "./src/navigation";
@@ -39,6 +40,7 @@ const App = () => {
         <PaperProvider>
           <StatusBar barStyle="light-content" />
           <Navigation />
+          <Toast />
         </PaperProvider>
       </PersistGate>
     </Provider>

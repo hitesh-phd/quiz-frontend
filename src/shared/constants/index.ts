@@ -11,6 +11,13 @@ type fontWeight =
 
 export const BASE_URL = "https://pixelhexdigital-quiz.onrender.com";
 
+export const OPACITY = {
+  FULL: 1,
+  SEMI_FULL: 0.75,
+  HALF: 0.5,
+  NONE: 0,
+};
+
 // Font Weight Constants
 export const FONT_WEIGHT = {
   Thin: "100" as fontWeight,
@@ -40,6 +47,7 @@ export const SOMETHING_WENT_WRONG = "Something went wrong";
 export const SCREENS = {
   AUTH_STACK: "AuthStack",
   HOME_STACK: "HomeStack",
+  MAIN_STACK: "MainStack",
   HOME: "Home",
   LEADER_BOARD: "LeaderBoard",
   USER_PROFILE: "UserProfile",

@@ -5,19 +5,18 @@ import { ActivityIndicator } from "react-native-paper";
 import { object, string } from "yup";
 import { RootState, useAppDispatch } from "@services/redux/Store";
 import { useAppSelector } from "@services/redux/Hook";
+import { navigate } from "react-navigation-helpers";
+import { IconType } from "react-native-dynamic-vector-icons";
 
 import createStyles from "./Register.style";
 import NavBar from "@shared-components/NavBar/NavBar";
-import AppScreen from "@shared-components/UI/AppScreen/AppScreen";
 import Text from "@shared-components/text-wrapper/TextWrapper";
 import Form from "@shared-components/Forms/Form";
 import FormField from "@shared-components/Forms/FormField";
+import MyStatusBar from "@shared-components/MyStatusBar";
 import SubmitButton from "@shared-components/Forms/SubmitButton";
 import { registerAction } from "@services/redux/AuthenticationSlice";
-
-// type LoginProps = {
-//   null?: null;
-// };
+import { SCREENS } from "@shared-constants";
 
 const Register = () => {
   const { loading, error } = useAppSelector((state: RootState) => state.Auth);
@@ -54,15 +53,20 @@ const Register = () => {
     dispatch(registerAction({ name, email, password }));
   };
 
+  const handleLoginButton = () => {
+    navigate(SCREENS.LOGIN);
+  };
+
   return (
-    <AppScreen style={{}}>
+    <View style={styles.container}>
+      <MyStatusBar backgroundColor={colors.primary} />
       <NavBar title="Register" />
       {loading && (
         <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" />
         </View>
       )}
-      <View style={{ ...styles.container, opacity: loading ? 0.5 : 1 }}>
+      <View style={{ ...styles.innerContainer, opacity: loading ? 0.5 : 1 }}>
         <Form
           initialValues={{
             name: "",
@@ -77,20 +81,19 @@ const Register = () => {
         >
           <FormField
             label="Name"
-            leftIcon="email-outline"
+            leftIcon="user-o"
             name="name"
             placeholder=" Your Name"
-            // icon="email"
             autoCapitalize="none"
             autoCorrect={false}
             textContentType="name"
+            iconType={IconType.FontAwesome}
           />
           <FormField
             label="Email Address "
             leftIcon="email-outline"
             name="email"
             placeholder=" Your email address"
-            // icon="email"
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="email-address"
@@ -121,21 +124,23 @@ const Register = () => {
             textContentType="password"
           />
           <SubmitButton title="Register" color="primary" textColor="white" />
-          <TouchableOpacity onPress={() => {}}>
+          <View style={styles.loginTextContainer}>
             <Text h4 center color={colors.black} style={styles.loginTextStyle}>
               Alredy have an account?{" "}
+            </Text>
+            <TouchableOpacity onPress={handleLoginButton}>
               <Text center color={colors.primary} style={styles.loginTextStyle}>
                 Login
               </Text>
-            </Text>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
           <Text h5 center style={{ marginTop: 20 }}>
             By continuing, you agree to <Text bold>our Terms of Services </Text>
             &<Text bold> Privacy Policy</Text>
           </Text>
         </Form>
       </View>
-    </AppScreen>
+    </View>
   );
 };
 export default Register;

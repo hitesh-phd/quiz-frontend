@@ -7,6 +7,7 @@ interface Style {
 export default () => {
   return StyleSheet.create<Style>({
     screen: {
+      flex: 1,
       paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
       marginVertical: 10,
     },
