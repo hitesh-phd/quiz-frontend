@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useColorScheme, Image } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { isReadyRef, navigationRef } from "react-navigation-helpers";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -12,28 +12,51 @@ import LeaderBoard from "@screens/LeaderBoard/LeaderBoard";
 import UserProfile from "@screens/UserProfile/UserProfile";
 import OnBoarding from "@screens/onBoarding/OnBoarding";
 import { NewPassword, ForgotPassword, Login, Register } from "@screens/Auth";
+import QuizOverview from "@screens/Quiz/QuizOverview/QuizOverview";
 import { selectIsAuthenticated } from "@services/redux/AuthenticationSlice";
 import { LightTheme, DarkTheme, palette } from "@theme/themes";
 import { SCREENS } from "@shared-constants";
+import { RootStackParams } from "./types";
+import Quiz from "@screens/Quiz/Quiz";
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParams>();
+
+// type RootStackParamList = {
+// [SCREENS.HOME]: undefined;
+//   [SCREENS.LEADER_BOARD]: undefined;
+//   [SCREENS.USER_PROFILE]: undefined;
+//   [SCREENS.ON_BOARDING]: undefined;
+//   [SCREENS.LOGIN]: undefined;
+//   [SCREENS.REGISTER]: undefined;
+//   [SCREENS.NEW_PASSWORD]: undefined;
+//   [SCREENS.FORGOT_PASSWORD]: undefined;
+//   [SCREENS.QUIZ]: undefined;
+//   [SCREENS.QUIZ_OVERVIEW]: undefined;
+// };
+
+// export type RootStackNavigationProp = StackNavigationProp<
+//   RootStackParamList,
+//   keyof RootStackParamList
+// >;
 
 const AuthStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name={SCREENS.ON_BOARDING} component={OnBoarding} />
-      <Stack.Screen name={SCREENS.LOGIN} component={Login} />
-      <Stack.Screen name={SCREENS.REGISTER} component={Register} />
-      <Stack.Screen name={SCREENS.NEW_PASSWORD} component={NewPassword} />
-      <Stack.Screen name={SCREENS.FORGOT_PASSWORD} component={ForgotPassword} />
+      <Stack.Screen name="OnBoarding" component={OnBoarding} />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="NewPassword" component={NewPassword} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
     </Stack.Navigator>
   );
 };
 
 const HomeStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name={SCREENS.HOME} component={Home} />
+    <Stack.Screen name="Home" component={Home} />
+    <Stack.Screen name="Quiz" component={Quiz} />
+    <Stack.Screen name="QuizOverview" component={QuizOverview} />
   </Stack.Navigator>
 );
 
@@ -52,7 +75,6 @@ const renderTabIcon = (
       return focused ? (
         <Icon
           name="leaderboard"
-          // type="MaterialIcons"
           type={IconType.MaterialIcons}
           size={size}
           color={color}
@@ -128,12 +150,9 @@ const Navigation = () => {
     >
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isAuthenticated ? (
-          <Stack.Screen
-            name={SCREENS.MAIN_STACK}
-            component={RenderTabNavigation}
-          />
+          <Stack.Screen name="MainStack" component={RenderTabNavigation} />
         ) : (
-          <Stack.Screen name={SCREENS.AUTH_STACK} component={AuthStack} />
+          <Stack.Screen name="AuthStack" component={AuthStack} />
         )}
       </Stack.Navigator>
     </NavigationContainer>

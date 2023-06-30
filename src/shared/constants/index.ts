@@ -60,6 +60,11 @@ export const SCREENS = {
   FORGOT_PASSWORD: "ForgotPassword",
   NEW_PASSWORD: "NewPassword",
   ON_BOARDING: "OnBoarding",
+  QUIZ: "Quiz",
+  QUIZ_RESULT: "QuizResult",
+  QUIZ_DETAIL: "QuizDetail",
+  QUIZ_DETAIL_RESULT: "QuizDetailResult",
+  QUIZ_OVERVIEW: "QuizOverview",
 };
 
 // ? Icons

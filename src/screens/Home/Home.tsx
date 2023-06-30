@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, TouchableOpacity } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Avatar } from "react-native-paper";
 import Icon, { IconType } from "react-native-dynamic-vector-icons";
@@ -10,8 +10,7 @@ import Header from "./components/Header/Header";
 import TopPickCard from "./components/TopPick/TopPickCard";
 import { palette } from "@theme/themes";
 import MyStatusBar from "@shared-components/MyStatusBar";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { OPACITY } from "@shared-constants";
+import { OPACITY, SCREENS } from "@shared-constants";
 
 type Props = {
   navigation: any;
@@ -81,6 +80,14 @@ const Home = ({ navigation }: Props) => {
   const theme = useTheme();
   const { colors } = theme;
   const styles = useMemo(() => createStyles(theme), [theme]);
+
+  const handleCategoryPress = (id: string, name: string) => {
+    console.log("id: ", id);
+    navigation.navigate(SCREENS.QUIZ_OVERVIEW, {
+      categoryId: id,
+      categoryName: name,
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -164,6 +171,7 @@ const Home = ({ navigation }: Props) => {
                 style={[styles.categoryItem, { backgroundColor: item.color }]}
                 key={item.id}
                 activeOpacity={OPACITY.SEMI_FULL}
+                onPress={() => handleCategoryPress(item.id, item.title)}
               >
                 <View style={styles.categoryIconContainer}>
                   <Icon
