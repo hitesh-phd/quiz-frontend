@@ -8,10 +8,15 @@ import Text from "@shared-components/text-wrapper/TextWrapper";
 
 type NavBarProps = {
   color?: string;
+  iconColor?: string;
   title: string;
 };
 
-const NavBar = ({ color = "transparent", title }: NavBarProps) => {
+const NavBar = ({
+  color = "transparent",
+  title,
+  iconColor = "black",
+}: NavBarProps) => {
   const navigate = useNavigation();
   const theme = useTheme();
   const { colors } = theme;
@@ -25,7 +30,11 @@ const NavBar = ({ color = "transparent", title }: NavBarProps) => {
     <View style={[styles.container, { backgroundColor: colors[color] }]}>
       <View style={styles.icon}>
         <TouchableOpacity onPress={handleBackButton}>
-          <MaterialIcons name="arrow-back" size={28} color="#000" />
+          <MaterialIcons
+            name="arrow-back"
+            size={28}
+            color={colors[iconColor]}
+          />
         </TouchableOpacity>
       </View>
       <Text h2 center color={colors.black} style={styles.title}>

@@ -1,23 +1,22 @@
 import React, { useMemo } from "react";
 import { useTheme } from "@react-navigation/native";
 import { View, Image } from "react-native";
-
-import Text from "@shared-components/text-wrapper/TextWrapper";
-import createStyles from "./OnBoarding.style";
-
 import { navigate } from "react-navigation-helpers";
-import { ICONS, SCREENS } from "@shared-constants";
+
+import createStyles from "./OnBoarding.style";
 import Button from "@shared-components/UI/Button/Button";
-import MainView from "@shared-components/UI/MainView/MainView";
+import AppScreen from "@shared-components/UI/AppScreen/AppScreen";
+import Text from "@shared-components/text-wrapper/TextWrapper";
 
-type LoginProps = {};
+import { ICONS, SCREENS } from "@shared-constants";
 
-const OnBoarding: React.FC<LoginProps> = () => {
+const OnBoarding: React.FC = () => {
   const theme = useTheme();
   const { colors } = theme;
   const styles = useMemo(() => createStyles(theme), [theme]);
 
   const onLoginButtonHandler = () => {
+    console.log("Login");
     navigate(SCREENS.LOGIN);
   };
 
@@ -26,21 +25,12 @@ const OnBoarding: React.FC<LoginProps> = () => {
   };
 
   return (
-    <MainView style={styles.container}>
-      <View
-        style={{
-          flex: 4,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+    <AppScreen style={styles.container}>
+      <View style={styles.imageContainer}>
         <Image source={ICONS.LOGO} style={{}} />
         <Image
           source={ICONS.ILLUSTRATION}
-          style={{
-            width: 300,
-            height: 300,
-          }}
+          style={{ width: 300, height: 300 }}
         />
       </View>
       <View style={styles.cardContainer}>
@@ -70,7 +60,7 @@ const OnBoarding: React.FC<LoginProps> = () => {
           Later
         </Text>
       </View>
-    </MainView>
+    </AppScreen>
   );
 };
 

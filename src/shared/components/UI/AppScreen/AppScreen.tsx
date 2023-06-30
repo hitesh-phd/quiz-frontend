@@ -1,16 +1,16 @@
 import React, { ReactNode, useMemo } from "react";
 import { SafeAreaView, ViewStyle } from "react-native";
-import createStyles from "./MainView.style";
+import createStyles from "./AppScreen.style";
 
 interface ScreenProps {
   children?: ReactNode;
   style?: ViewStyle;
 }
 
-const MainView = ({ children, style }: ScreenProps) => {
+const AppScreen = ({ children, style }: ScreenProps) => {
   const styles = useMemo(() => createStyles(), []);
 
   return <SafeAreaView style={[styles.screen, style]}>{children}</SafeAreaView>;
 };
 
-export default MainView;
+export default AppScreen;

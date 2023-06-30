@@ -11,6 +11,13 @@ type fontWeight =
 
 export const BASE_URL = "https://pixelhexdigital-quiz.onrender.com";
 
+export const OPACITY = {
+  FULL: 1,
+  SEMI_FULL: 0.75,
+  HALF: 0.5,
+  NONE: 0,
+};
+
 // Font Weight Constants
 export const FONT_WEIGHT = {
   Thin: "100" as fontWeight,
@@ -39,7 +46,11 @@ export const SOMETHING_WENT_WRONG = "Something went wrong";
 // ? Screens
 export const SCREENS = {
   AUTH_STACK: "AuthStack",
+  HOME_STACK: "HomeStack",
+  MAIN_STACK: "MainStack",
   HOME: "Home",
+  LEADER_BOARD: "LeaderBoard",
+  USER_PROFILE: "UserProfile",
   SEARCH: "Search",
   NOTIFICATION: "Notification",
   PROFILE: "Profile",
@@ -49,6 +60,11 @@ export const SCREENS = {
   FORGOT_PASSWORD: "ForgotPassword",
   NEW_PASSWORD: "NewPassword",
   ON_BOARDING: "OnBoarding",
+  QUIZ: "Quiz",
+  QUIZ_RESULT: "QuizResult",
+  QUIZ_DETAIL: "QuizDetail",
+  QUIZ_DETAIL_RESULT: "QuizDetailResult",
+  QUIZ_OVERVIEW: "QuizOverview",
 };
 
 // ? Icons

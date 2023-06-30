@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { useTheme } from "@react-navigation/native";
 import { useFormikContext, FormikValues } from "formik";
 import { TextInput, TextInputProps } from "react-native-paper";
+import Icon, { IconType, IconProps } from "react-native-dynamic-vector-icons";
 
 import createStyles from "./FormField.style";
 import ErrorMessage from "./ErrorMessage";
@@ -13,19 +14,24 @@ interface Props extends TextInputProps {
   rightIcon?: string;
   leftIcon?: string;
   iconColor?: string;
+  iconType?: IconType;
   onRightIconPress?: () => void;
 }
 
-interface FormFieldProps extends Props {}
+const CustomIcon = ({ name, type, color }: IconProps) => (
+  <Icon name={name} type={type} size={20} color={color} />
+);
+
 const FormField = ({
   name,
   label,
   rightIcon = "",
   leftIcon,
-  iconColor = "#6A5AE0",
+  iconColor = "primary",
   onRightIconPress,
+  iconType = IconType.MaterialCommunityIcons,
   ...otherProps
-}: FormFieldProps) => {
+}: Props) => {
   const theme = useTheme();
   const { colors } = theme;
   const styles = useMemo(() => createStyles(theme), [theme]);
@@ -54,9 +60,22 @@ const FormField = ({
             />
           )
         }
+        // left={
+        //   leftIcon && (
+        //     <TextInput.Icon icon={leftIcon} iconColor={colors.primary} />
+        //   )
+        // }
         left={
           leftIcon && (
-            <TextInput.Icon icon={leftIcon} iconColor={colors.primary} />
+            <TextInput.Icon
+              icon={() => (
+                <CustomIcon
+                  color={colors[iconColor]}
+                  type={iconType}
+                  name={leftIcon}
+                />
+              )}
+            />
           )
         }
         outlineStyle={styles.inputOutline}

@@ -1,21 +1,16 @@
-import { BASE_URL } from "../../shared/constants/index";
+import { BASE_URL, SOMETHING_WENT_WRONG } from "../../shared/constants/index";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosResponse } from "axios";
+import { ToastMessage } from "utils/Toast";
 
 type User = {
   email: string;
-  password: string;
+  name: string;
 };
 
 type Tokens = {
-  access: {
-    expires: string;
-    token: string;
-  };
-  refresh: {
-    expires: string;
-    token: string;
-  };
+  access: { token: string };
+  refresh: { token: string };
 };
 
 type LoginResponse = {
@@ -25,10 +20,31 @@ type LoginResponse = {
 
 type RegisterResponse = {
   user: User;
+  tokens: Tokens;
+};
+
+interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+}
+
+interface RefreshTokenPayload {
+  refreshToken: string;
+  token: string;
+}
+
+type ErrorResponse = {
+  message: string;
 };
 
 type AuthState = {
-  user: User | null;
+  userName: string;
   accessToken: string | null;
   refreshToken: string | null;
   loading: boolean;
@@ -38,27 +54,13 @@ type AuthState = {
 };
 
 const initialState: AuthState = {
-  user: null,
+  userName: "",
   accessToken: null,
   refreshToken: null,
   loading: false,
   error: null,
   isAuthenticated: false,
   isRegistered: false,
-};
-
-interface LoginPayload {
-  email: string;
-  password: string;
-}
-
-interface RegisterPayload {
-  email: string;
-  password: string;
-}
-
-type ErrorResponse = {
-  message: string;
 };
 
 export const loginAction = createAsyncThunk<
@@ -69,16 +71,14 @@ export const loginAction = createAsyncThunk<
   try {
     const response: AxiosResponse<LoginResponse> = await axios.post(
       `${BASE_URL}/v1/auth/login`,
-      {
-        email,
-        password,
-      },
+      { email, password },
     );
-    console.log("Inside login action");
     console.log("res.data", response.data);
+    ToastMessage.showSuccessMessage("Login Successful");
     return response.data;
   } catch (error: any) {
     console.log("error", error?.response?.data?.message);
+    ToastMessage.showErrorMessage(error?.response?.data?.message);
     return rejectWithValue(error?.response?.data);
   }
 });
@@ -87,13 +87,37 @@ export const registerAction = createAsyncThunk<
   RegisterResponse,
   RegisterPayload,
   { rejectValue: ErrorResponse }
->("auth/register", async ({ email, password }, { rejectWithValue }) => {
+>("auth/register", async ({ name, email, password }, { rejectWithValue }) => {
   try {
     const response: AxiosResponse<RegisterResponse> = await axios.post(
-      `${BASE_URL}/auth/register`,
+      `${BASE_URL}/v1/auth/register`,
       {
+        name,
         email,
         password,
+      },
+    );
+    console.log("Resonse from register action", response.data);
+    ToastMessage.showSuccessMessage("Registration Successful");
+    return response.data;
+  } catch (error: any) {
+    console.log("error", error?.response?.data?.message);
+    ToastMessage.showErrorMessage(error?.response?.data?.message);
+    return rejectWithValue(error?.response?.data);
+  }
+});
+
+export const refreshTokenAction = createAsyncThunk<
+  RegisterResponse,
+  RefreshTokenPayload,
+  { rejectValue: ErrorResponse }
+>("auth/refreshToken", async ({ refreshToken, token }, { rejectWithValue }) => {
+  try {
+    const response: AxiosResponse<RegisterResponse> = await axios.post(
+      `${BASE_URL}/v1/auth/refresh-tokens`,
+      {
+        refreshToken,
+        token,
       },
     );
     return response.data;
@@ -107,7 +131,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     Logout: (state) => {
-      state.user = null;
+      state.userName = "";
       state.accessToken = null;
       state.refreshToken = null;
       state.isAuthenticated = false;
@@ -123,33 +147,31 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.accessToken = action.payload.tokens.access.token;
         state.refreshToken = action.payload.tokens.refresh.token;
+        state.userName = action.payload.user.name;
       })
       .addCase(loginAction.rejected, (state, action) => {
         state.loading = false;
-        state.error = action?.payload?.message ?? "An unknown error occurred.";
+        state.error = action?.payload?.message ?? SOMETHING_WENT_WRONG;
       })
       .addCase(registerAction.pending, (state) => {
         state.loading = true;
       })
-      .addCase(registerAction.fulfilled, (state) => {
+      .addCase(registerAction.fulfilled, (state, action) => {
         state.loading = false;
-        // state.user = action.payload;
-        state.isRegistered = true;
+        state.isAuthenticated = true;
+        state.accessToken = action.payload.tokens.access.token;
+        state.refreshToken = action.payload.tokens.refresh.token;
+        state.userName = action.payload.user.name;
       })
       .addCase(registerAction.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? "An unknown error occurred.";
+        state.error = action.payload?.message ?? SOMETHING_WENT_WRONG;
       });
   },
 });
 
-export const selectUser = (state: { Auth: AuthState }) => state.Auth.user;
 export const selectIsAuthenticated = (state: { Auth: AuthState }) =>
   state.Auth.isAuthenticated;
-export const selectIsRegistered = (state: { Auth: AuthState }) =>
-  state.Auth.isRegistered;
-export const selectLoading = (state: { Auth: AuthState }) => state.Auth.loading;
-export const selectError = (state: { Auth: AuthState }) => state.Auth.error;
 
 export const { Logout } = authSlice.actions;
 

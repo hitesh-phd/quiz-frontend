@@ -4,7 +4,7 @@ import * as Yup from "yup";
 
 import createStyles from "./ForgotPassword.style";
 import NavBar from "@shared-components/NavBar/NavBar";
-import MainView from "@shared-components/UI/MainView/MainView";
+import AppScreen from "@shared-components/UI/AppScreen/AppScreen";
 import Button from "@shared-components/UI/Button/Button";
 import { Form, FormField } from "@shared-components/Forms";
 
@@ -16,7 +16,7 @@ const ForgotPassword = () => {
   });
 
   return (
-    <MainView>
+    <AppScreen>
       <NavBar title="Reset Password" />
       <View style={styles.formContainer}>
         <Form
@@ -46,7 +46,7 @@ const ForgotPassword = () => {
           </View>
         </Form>
       </View>
-    </MainView>
+    </AppScreen>
   );
 };
 

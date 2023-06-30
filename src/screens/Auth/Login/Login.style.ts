@@ -6,6 +6,7 @@ import { FONT_WEIGHT } from "@shared-constants";
 
 interface Style {
   container: ViewStyle;
+  innerContainer: ViewStyle;
   profileContainer: ViewStyle;
   profileDetailContainer: ViewStyle;
   cardStyle: ViewStyle;
@@ -19,6 +20,11 @@ export default (theme: ExtendedTheme) => {
   const { colors } = theme;
   return StyleSheet.create<Style>({
     container: {
+      flex: 1,
+      backgroundColor: colors.whisper,
+      width: ScreenWidth,
+    },
+    innerContainer: {
       flex: 1,
       padding: 20,
     },

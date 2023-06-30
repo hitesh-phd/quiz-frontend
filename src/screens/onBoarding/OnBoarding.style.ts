@@ -4,6 +4,7 @@ import { FONT_WEIGHT } from "@shared-constants";
 
 interface Style {
   container: ViewStyle;
+  imageContainer: ViewStyle;
   title: TextStyle;
   subTitle: TextStyle;
   cardContainer: ViewStyle;
@@ -17,6 +18,12 @@ export default (theme: ExtendedTheme) => {
       backgroundColor: colors.secondaryBackground,
       padding: 15,
     },
+    imageContainer: {
+      flex: 4,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+
     title: { marginTop: 20, textAlign: "center", fontWeight: FONT_WEIGHT.Bold },
     subTitle: {
       marginVertical: 10,

@@ -7,19 +7,15 @@ import { object, string } from "yup";
 import createStyles from "./Login.style";
 import Button from "@shared-components/UI/Button/Button";
 import NavBar from "@shared-components/NavBar/NavBar";
-import MainView from "@shared-components/UI/MainView/MainView";
 import Text from "@shared-components/text-wrapper/TextWrapper";
 import Form from "@shared-components/Forms/Form";
 import FormField from "@shared-components/Forms/FormField";
 import SubmitButton from "@shared-components/Forms/SubmitButton";
+import MyStatusBar from "@shared-components/MyStatusBar";
 import { ICONS } from "@shared-constants";
 import { RootState, useAppDispatch } from "@services/redux/Store";
 import { loginAction } from "@services/redux/AuthenticationSlice";
 import { useAppSelector } from "@services/redux/Hook";
-
-// type LoginProps = {
-//   null?: null;
-// };
 
 const Login: React.FC = () => {
   const { loading, error } = useAppSelector((state: RootState) => state.Auth);
@@ -51,14 +47,15 @@ const Login: React.FC = () => {
   };
 
   return (
-    <MainView style={{}}>
+    <View style={styles.container}>
+      <MyStatusBar backgroundColor={colors.primary} />
       <NavBar title="Login" />
       {loading && (
         <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" />
         </View>
       )}
-      <View style={{ ...styles.container, opacity: loading ? 0.5 : 1 }}>
+      <View style={{ ...styles.innerContainer, opacity: loading ? 0.5 : 1 }}>
         <Button
           onPress={() => {}}
           title="Login with Google"
@@ -132,7 +129,7 @@ const Login: React.FC = () => {
           </Text>
         </Form>
       </View>
-    </MainView>
+    </View>
   );
 };
 export default Login;
